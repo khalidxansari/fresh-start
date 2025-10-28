@@ -1,0 +1,9 @@
+# Python & VS Code
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.vscode/
+.env/
+*.csv
+*.xlsx
+.DS_Store
