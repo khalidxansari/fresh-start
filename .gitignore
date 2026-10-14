@@ -7,3 +7,6 @@ __pycache__/
 *.csv
 *.xlsx
 .DS_Store
+
+# Generated preview output (php dev/render-preview.php)
+dev/preview/
