@@ -49,3 +49,16 @@ add_action(
 		}
 	}
 );
+
+/**
+ * The music archive lists 20 songs per page (see the song-list block). Make the
+ * main query agree so pages past the last one return a 404 instead of an empty list.
+ */
+add_action(
+	'pre_get_posts',
+	static function ( $query ) {
+		if ( ! is_admin() && $query->is_main_query() && $query->is_post_type_archive( 'song' ) ) {
+			$query->set( 'posts_per_page', 20 );
+		}
+	}
+);

@@ -30,6 +30,7 @@ add_action(
 		add_theme_support( 'responsive-embeds' );
 		add_theme_support( 'wp-block-styles' );
 		add_theme_support( 'custom-logo' );
+		add_editor_style( 'style.css' );
 		add_image_size( 'hf-card', 640, 480, true );
 		add_image_size( 'hf-hero', 1920, 1080, true );
 	}

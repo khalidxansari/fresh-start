@@ -228,7 +228,11 @@ if ( defined( 'WP_CLI' ) && WP_CLI ) {
 				} elseif ( 'bool' === $def['type'] ) {
 					$value = in_array( strtolower( (string) $value ), array( '1', 'true', 'yes' ), true );
 				}
-				$values[ $field_key ] = hf_sanitize_field( $def, is_array( $value ) ? $value : (string) $value );
+				$clean = hf_sanitize_field( $def, is_array( $value ) ? $value : (string) $value );
+				if ( 'posts' !== $def['type'] && '' === $clean && '' !== trim( (string) $value ) && 'bool' !== $def['type'] ) {
+					WP_CLI::warning( "$label: ignored invalid `$front_key` value \"$value\"" );
+				}
+				$values[ $field_key ] = $clean;
 			}
 
 			if ( 'song' === $type ) {

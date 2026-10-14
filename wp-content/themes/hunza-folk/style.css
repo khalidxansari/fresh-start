@@ -71,6 +71,10 @@ body.hf-has-player {
 	border: 0;
 }
 
+.wp-site-blocks > * + * {
+	margin-block-start: 0;
+}
+
 .hf-main > * {
 	margin-block: 0;
 }

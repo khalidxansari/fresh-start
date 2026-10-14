@@ -68,9 +68,24 @@ A song with no media shows "Recording coming soon". Set one of:
 
 The site does not depend on Spotify or DistroKid.
 
-## Development
+## Editing songs
 
-The theme can't run without WordPress, so `dev/` has an offline preview that stubs the database and renders the real templates and renderers to static pages:
+Open a song, scroll to the bottom of the editor and click **Meta Boxes** (WordPress keeps that panel collapsed). The **Hunza Folk details** box holds the Urdu title, language, location, year, cultural note, media source, YouTube link or audio URL, performers, instruments, and the "Feature on the home page" tick box. You can paste a full YouTube link; the theme stores just the video ID. Edit the home page layout and the footer links under **Appearance > Editor**.
+
+## Testing
+
+The theme has been run and tested in real WordPress (7.1.3, SQLite). To build the same throwaway site yourself:
+
+```
+dev/setup-wp-test-site.sh /some/empty/folder 8090
+php -S 127.0.0.1:8090 -t /some/empty/folder/site /some/empty/folder/router.php
+BASE=http://127.0.0.1:8090 ADMIN_PASS=admin-test-pw SHOTS=/tmp \
+  NODE_PATH=$(npm root -g) node dev/wp-browser-test.js
+```
+
+That script installs WordPress and WP-CLI with Composer and fetches the SQLite plugin from GitHub, so it needs network access to packagist.org and github.com. The browser test logs in, edits songs through the real editor, plays audio, checks navigation while playing, filters, 404s, and that the Site Editor loads every template.
+
+There is also an offline preview that stubs the database. It is faster, but it does not run WordPress, so use the real-site test for anything that touches queries or the editor:
 
 ```
 php dev/test-import.php                 # markdown parser and importer scanning
@@ -79,4 +94,8 @@ python3 -m http.server 8123             # from the repo root
 NODE_PATH=$(npm root -g) SHOTS=/tmp node dev/browser-test.js
 ```
 
-The preview does not exercise real WordPress queries, the editor, or `wp hunza import` against a database. Check those on a staging site first.
+## Known limits
+
+- Not yet tested on a live host, with a caching plugin, or with YouTube playback itself. The sandbox could not reach YouTube, so only YouTube's failure path was exercised.
+- The social and support links are placeholders until you set them.
+- Filtering uses the `hf_instrument`, `hf_performer` and `hf_language` URL parameters. Bare names like `?instrument=` clash with WordPress's own query variables.

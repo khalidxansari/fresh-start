@@ -194,18 +194,20 @@ function hf_render_song_list( $attrs, $content = '', $block = null ) {
 
 	if ( ! empty( $attrs['filters'] ) ) {
 		// phpcs:disable WordPress.Security.NonceVerification -- public read-only filters.
-		$active['instrument'] = isset( $_GET['instrument'] ) ? absint( $_GET['instrument'] ) : 0;
-		$active['performer']  = isset( $_GET['performer'] ) ? absint( $_GET['performer'] ) : 0;
-		$active['language']   = isset( $_GET['language'] ) ? sanitize_text_field( wp_unslash( $_GET['language'] ) ) : '';
+		// Prefixed so they never collide with WordPress query variables: a bare
+		// ?instrument= is read as the "instrument" post type and 404s.
+		$active['hf_instrument'] = isset( $_GET['hf_instrument'] ) ? absint( $_GET['hf_instrument'] ) : 0;
+		$active['hf_performer']  = isset( $_GET['hf_performer'] ) ? absint( $_GET['hf_performer'] ) : 0;
+		$active['hf_language']   = isset( $_GET['hf_language'] ) ? sanitize_text_field( wp_unslash( $_GET['hf_language'] ) ) : '';
 		// phpcs:enable
-		if ( $active['instrument'] ) {
-			$meta_query[] = array( 'key' => 'hf_instruments', 'value' => $active['instrument'] );
+		if ( $active['hf_instrument'] ) {
+			$meta_query[] = array( 'key' => 'hf_instruments', 'value' => $active['hf_instrument'] );
 		}
-		if ( $active['performer'] ) {
-			$meta_query[] = array( 'key' => 'hf_performers', 'value' => $active['performer'] );
+		if ( $active['hf_performer'] ) {
+			$meta_query[] = array( 'key' => 'hf_performers', 'value' => $active['hf_performer'] );
 		}
-		if ( $active['language'] ) {
-			$meta_query[] = array( 'key' => 'hf_language', 'value' => $active['language'] );
+		if ( $active['hf_language'] ) {
+			$meta_query[] = array( 'key' => 'hf_language', 'value' => $active['hf_language'] );
 		}
 	}
 
@@ -310,9 +312,9 @@ function hf_render_song_filters( $active ) {
 	$langs       = array_combine( $languages, $languages ) ?: array();
 
 	$html  = '<form class="hf-filters" method="get" action="' . esc_url( get_post_type_archive_link( 'song' ) ) . '">';
-	$html .= $build( 'language', 'Language', $langs, $active['language'] );
-	$html .= $build( 'instrument', 'Instrument', $instruments, $active['instrument'] );
-	$html .= $build( 'performer', 'Performer', $performers, $active['performer'] );
+	$html .= $build( 'hf_language', 'Language', $langs, $active['hf_language'] );
+	$html .= $build( 'hf_instrument', 'Instrument', $instruments, $active['hf_instrument'] );
+	$html .= $build( 'hf_performer', 'Performer', $performers, $active['hf_performer'] );
 	$html .= '<button type="submit" class="hf-btn hf-btn--ghost">Filter</button>';
 	if ( array_filter( $active ) ) {
 		$html .= '<a class="hf-filters__reset" href="' . esc_url( get_post_type_archive_link( 'song' ) ) . '">Clear</a>';
